@@ -1,41 +1,28 @@
 package com.demoapp.students;
 
+import jakarta.persistence.*;
+import lombok.*;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "students")
 public class Student {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    private String name;
+
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
+
+    @Column(name = "reg_number")
+    private  String regNumber;
+
     private String course;
 
-    public Student(int id, String name, String course) {
-        this.id = id;
-        this.name = name;
-        this.course = course;
-    }
-
-    public Student() {
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setCourse(String course) {
-        this.course = course;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getCourse() {
-        return course;
-    }
 }

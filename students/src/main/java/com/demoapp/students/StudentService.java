@@ -10,10 +10,11 @@ public class StudentService {
 
     private List<Student> students = new ArrayList<>();
 
+
     public StudentService(){
-        students.add(new Student(1, "Kelvin", "CS"));
-        students.add(new Student(2, "Amani", "CS"));
+
     }
+
 
     public List<Student> getAllStudents(){
         return students;
@@ -28,5 +29,6 @@ public class StudentService {
         }
         return null;
     }
+
 
 }
