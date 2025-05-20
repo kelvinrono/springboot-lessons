@@ -6,10 +6,7 @@ import com.demoapp.students.services.StudentServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +26,6 @@ public class StudentController {
     @GetMapping
     public List<Student> getAllStudents(){
         List<Student> students = studentService.getAllStudents();
-        System.out.println("Returning students: " + students);
         return students;
     }
 
@@ -37,6 +33,16 @@ public class StudentController {
     @GetMapping("/{id}")
     public Student getStudentById(@PathVariable int id){
       return studentService.getStudent(id);
+    }
+
+    @PostMapping()
+    public Student saveStudent(@RequestBody Student student){
+        return studentService.saveStudent(student);
+    }
+
+    @PutMapping("/{id}")
+    Student updateStudent(@RequestBody Student student, @PathVariable int id){
+        return studentService.updateStudent(student, id);
     }
 
 }
