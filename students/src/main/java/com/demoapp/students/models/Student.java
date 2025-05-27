@@ -27,13 +27,17 @@ public class Student {
 
     private String course;
 
-    public Student(Integer id, String firstName, String lastName, String email, String regNumber, String course) {
+    @Column(name = "is_deleted")
+    private Boolean isDeleted = false;
+
+    public Student(Integer id, String firstName, String lastName, String email, String regNumber, String course, Boolean isDeleted) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.regNumber = regNumber;
         this.course = course;
+        this.isDeleted = isDeleted;
     }
 
     public Student() {
@@ -85,5 +89,13 @@ public class Student {
 
     public void setCourse(String course) {
         this.course = course;
+    }
+
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
     }
 }

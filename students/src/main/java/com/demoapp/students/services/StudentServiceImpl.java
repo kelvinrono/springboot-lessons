@@ -83,12 +83,8 @@ public class StudentServiceImpl implements StudentService{
             }
 
             Student existingStudent = optionalStudent.get();
-
             existingStudent.setEmail(student.getEmail());
             existingStudent.setFirstName(student.getFirstName());
-            existingStudent.setLastName(student.getLastName());
-            existingStudent.setCourse(student.getCourse());
-            existingStudent.setRegNumber(student.getRegNumber());
 
             studentRepository.save(existingStudent);
 
@@ -98,6 +94,29 @@ public class StudentServiceImpl implements StudentService{
             e.printStackTrace();
             return null;
         }
+
+    }
+
+    @Override
+    public String deleteStudent(int id) {
+
+        try{
+            Optional<Student> existingStudent = studentRepository.findById(id);
+
+            if(existingStudent.isEmpty()){
+                throw  new RuntimeException("Student with the given ID does not exist");
+            }
+
+            existingStudent.get().setDeleted(true);
+
+            studentRepository.save(existingStudent.get());
+
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+            throw  new RuntimeException("An error occured while deleting a student");
+        }
+        return "Student deleted successfully";
 
     }
 

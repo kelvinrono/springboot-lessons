@@ -10,4 +10,5 @@ public interface StudentService {
     Student getStudent(int id);
     Student saveStudent(Student student);
     Student updateStudent(Student student, int id);
+    String deleteStudent(int id);
 }

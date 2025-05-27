@@ -40,9 +40,14 @@ public class StudentController {
         return studentService.saveStudent(student);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     Student updateStudent(@RequestBody Student student, @PathVariable int id){
         return studentService.updateStudent(student, id);
+    }
+
+    @PutMapping("/{id}")
+    String deleteStudent(@PathVariable int id){
+        return studentService.deleteStudent(id);
     }
 
 }
