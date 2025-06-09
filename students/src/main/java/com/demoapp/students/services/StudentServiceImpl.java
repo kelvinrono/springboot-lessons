@@ -3,7 +3,9 @@ package com.demoapp.students.services;
 import com.demoapp.students.models.Student;
 import com.demoapp.students.repositories.StudentRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -11,9 +13,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class StudentServiceImpl implements StudentService{
 
     private final StudentRepository studentRepository;
+
 
     @Autowired
     public StudentServiceImpl(StudentRepository studentRepository){
@@ -24,11 +28,15 @@ public class StudentServiceImpl implements StudentService{
     @Override
     public List<Student> getAllStudents() {
         try {
+            log.info("Getting all the students");
+
             List<Student> allStudents = studentRepository.findAll();
-            System.out.println("Found students: " + allStudents);
+
+            log.info("All students retrieved");
             return allStudents;
         }
         catch (Exception e){
+            log.error("An exception occured");
             e.printStackTrace();
             return null;
         }

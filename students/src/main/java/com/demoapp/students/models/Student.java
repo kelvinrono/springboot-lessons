@@ -3,14 +3,16 @@ package com.demoapp.students.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.UUID;
+
 
 @Entity
 @Table(name = "students")
-@Data
+@Data // setters, getter, toString
 public class Student {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO) // auto generate the ids - > the ids are integers
     private Integer id;
 
     @Column(name = "first_name")
