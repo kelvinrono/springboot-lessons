@@ -1,6 +1,7 @@
 package com.demoapp.students.controllers;
 
 import com.demoapp.students.models.Student;
+import com.demoapp.students.responses.ApiResponse;
 import com.demoapp.students.services.StudentService;
 import com.demoapp.students.services.StudentServiceImpl;
 import lombok.AllArgsConstructor;
@@ -24,28 +25,28 @@ public class StudentController {
     }
 
     @GetMapping
-    public List<Student> getAllStudents(){
-        List<Student> students = studentService.getAllStudents();
-        return students;
+    public ApiResponse<List<Student>> getAllStudents(){
+       return studentService.getAllStudents();
+
     }
 
     @GetMapping("/{id}")
-    public Student getStudentById(@PathVariable int id){
+    public ApiResponse<Student> getStudentById(@PathVariable int id){
       return studentService.getStudent(id);
     }
 
     @PostMapping()
-    public Student saveStudent(@RequestBody Student student){
+    public ApiResponse<Void> saveStudent(@RequestBody Student student){
         return studentService.saveStudent(student);
     }
 
     @PatchMapping("/{id}")
-    Student updateStudent(@RequestBody Student student, @PathVariable int id){
+   ApiResponse<Void> updateStudent(@RequestBody Student student, @PathVariable int id){
         return studentService.updateStudent(student, id);
     }
 
     @DeleteMapping("/{id}")
-    String deleteStudent(@PathVariable int id){
+    ApiResponse<Void>  deleteStudent(@PathVariable int id){
         return studentService.deleteStudent(id);
     }
 

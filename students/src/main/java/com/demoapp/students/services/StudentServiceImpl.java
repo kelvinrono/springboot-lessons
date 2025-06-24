@@ -2,6 +2,7 @@ package com.demoapp.students.services;
 
 import com.demoapp.students.models.Student;
 import com.demoapp.students.repositories.StudentRepository;
+import com.demoapp.students.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,73 +25,69 @@ public class StudentServiceImpl implements StudentService{
         this.studentRepository = studentRepository;
     }
 
-
     @Override
-    public List<Student> getAllStudents() {
+    public ApiResponse<List<Student>> getAllStudents() {
         try {
-            log.info("Getting all the students");
 
             List<Student> allStudents = studentRepository.findAll();
 
-            log.info("All students retrieved");
-            return allStudents;
+            return new ApiResponse<>(true, "All students fetched successfully", allStudents);
         }
         catch (Exception e){
-            log.error("An exception occured");
             e.printStackTrace();
-            return null;
+            return new ApiResponse<>(false, "Oops! Something went wrong with the server", null);
         }
     }
 
 
     @Override
-    public Student getStudent(int id) {
+    public ApiResponse<Student> getStudent(int id) {
         try {
 
             Optional<Student> student = studentRepository.findById(id); //null
 
             if(student.isEmpty()){
-                throw new RuntimeException("student with the given id does not exist");
+                return new ApiResponse<>(false, "student with the given id does not exist", null);
             }
 
-            return student.get();
+            return new ApiResponse<>(true, "Student data retrieved successfully", student.get());
         }
         catch (Exception ex){
             ex.printStackTrace();
-            return  null;
+            return new ApiResponse<>(false, "Oops! Something went wrong with the server ", null);
         }
 
     }
 
     @Override
-    public Student saveStudent(Student student) {
+    public ApiResponse<Void> saveStudent(Student student) {
 
         try {
             Optional<Student> existingStudent = studentRepository.findByEmail(student.getEmail());
 
             if(existingStudent.isPresent()) {
-                throw  new RuntimeException("Student with the given email already exist");
+                return new ApiResponse<>(false, "User with that email already exist", null);
             }
 
             studentRepository.save(student);
 
-            return student;
+            return new ApiResponse<>(true, "Student saved successfully", null);
         }
         catch (Exception e){
             e.printStackTrace();
-            return null;
+            return new ApiResponse<>(false, "Oops! Something went wrong with the server", null);
         }
 
     }
 
     @Override
-    public Student updateStudent(Student student, int id) {
+    public ApiResponse<Void> updateStudent(Student student, int id) {
 
         try {
             Optional<Student> optionalStudent = studentRepository.findById(id);
 
             if(optionalStudent.isEmpty()){
-                throw new RuntimeException("Student with the given ID does not exist");
+                return new ApiResponse<>(false, "Student with the given ID does not exist", null);
             }
 
             Student existingStudent = optionalStudent.get();
@@ -100,35 +97,35 @@ public class StudentServiceImpl implements StudentService{
 
             studentRepository.save(existingStudent);
 
-            return existingStudent;
+            return new ApiResponse<>(true, "User updated successfully", null);
         }
         catch ( Exception e){
             e.printStackTrace();
-            return null;
+            return new ApiResponse<>(false, "Oops! Something went wrong with the server", null);
         }
 
     }
 
     @Override
-    public String deleteStudent(int id) {
+    public ApiResponse<Void> deleteStudent(int id) {
 
         try{
             Optional<Student> existingStudent = studentRepository.findById(id);
 
             if(existingStudent.isEmpty()){
-                throw  new RuntimeException("Student with the given ID does not exist");
+                return  new ApiResponse<>(false, "Student with the given ID does not exist", null);
             }
 
             existingStudent.get().setDeleted(true);
 
             studentRepository.save(existingStudent.get());
+            return new ApiResponse<>(true, "User has been deleted successfully", null);
 
         }
         catch (Exception ex){
             ex.printStackTrace();
-            throw  new RuntimeException("An error occured while deleting a student");
+            return new ApiResponse<>(false, "Oops! Something went wrong with the server", null);
         }
-        return "Student deleted successfully";
 
     }
 
