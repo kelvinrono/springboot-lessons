@@ -46,10 +46,13 @@ public class StudentServiceImpl implements StudentService{
     @Override
     public Student getStudent(int id) {
         try {
-            Optional<Student> student = studentRepository.findById(id);
+
+            Optional<Student> student = studentRepository.findById(id); //null
+
             if(student.isEmpty()){
                 throw new RuntimeException("student with the given id does not exist");
             }
+
             return student.get();
         }
         catch (Exception ex){
@@ -91,6 +94,7 @@ public class StudentServiceImpl implements StudentService{
             }
 
             Student existingStudent = optionalStudent.get();
+
             existingStudent.setEmail(student.getEmail());
             existingStudent.setFirstName(student.getFirstName());
 
@@ -127,6 +131,5 @@ public class StudentServiceImpl implements StudentService{
         return "Student deleted successfully";
 
     }
-
 
 }

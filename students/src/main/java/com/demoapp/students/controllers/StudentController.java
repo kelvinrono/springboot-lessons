@@ -29,7 +29,6 @@ public class StudentController {
         return students;
     }
 
-
     @GetMapping("/{id}")
     public Student getStudentById(@PathVariable int id){
       return studentService.getStudent(id);
@@ -45,7 +44,7 @@ public class StudentController {
         return studentService.updateStudent(student, id);
     }
 
-    @PutMapping("/{id}")
+    @DeleteMapping("/{id}")
     String deleteStudent(@PathVariable int id){
         return studentService.deleteStudent(id);
     }
