@@ -6,6 +6,10 @@ import com.demoapp.students.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -26,10 +30,13 @@ public class StudentServiceImpl implements StudentService{
     }
 
     @Override
-    public ApiResponse<List<Student>> getAllStudents() {
+    public ApiResponse<Page<Student>> getAllStudents(int pageNumber, int pageSize) {
         try {
 
-            List<Student> allStudents = studentRepository.findAll();
+            Pageable pageable = PageRequest.of(pageNumber, pageSize);
+           // Pageable pageable1 = PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending());
+
+            Page<Student> allStudents = studentRepository.findAll(pageable);
 
             return new ApiResponse<>(true, "All students fetched successfully", allStudents);
         }

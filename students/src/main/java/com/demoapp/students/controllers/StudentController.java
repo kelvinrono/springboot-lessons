@@ -7,6 +7,7 @@ import com.demoapp.students.services.StudentServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -25,9 +26,8 @@ public class StudentController {
     }
 
     @GetMapping
-    public ApiResponse<List<Student>> getAllStudents(){
-       return studentService.getAllStudents();
-
+    public ApiResponse<Page<Student>> getAllStudents(@RequestParam int pageNumber, @RequestParam int pageSize){
+       return studentService.getAllStudents(pageNumber, pageSize);
     }
 
     @GetMapping("/{id}")

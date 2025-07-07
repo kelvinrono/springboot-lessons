@@ -3,6 +3,8 @@ package com.demoapp.students.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -27,10 +29,29 @@ public class Student {
     @Column(name = "reg_number")
     private  String regNumber;
 
+    @Column(name = "created_at")
+    private LocalDateTime createdAt = LocalDateTime.now();
+
     private String course;
 
     @Column(name = "is_deleted")
     private Boolean isDeleted = false;
+
+    @ManyToOne
+    @JoinColumn(name = "teacher_id")
+    private Teacher teacher;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "passport_id", referencedColumnName = "id") //passport_id is Foreign key column in the students table
+    private Passport passport;
+
+    @ManyToMany
+    @JoinTable(
+            name = "student_courses",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
+    private List<Course> courses;
 
     public Student(Integer id, String firstName, String lastName, String email, String regNumber, String course, Boolean isDeleted) {
         this.id = id;
