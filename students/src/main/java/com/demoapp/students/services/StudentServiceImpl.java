@@ -1,11 +1,16 @@
 package com.demoapp.students.services;
 
+import com.demoapp.students.DTOs.AuthDTO;
+import com.demoapp.students.models.Department;
+import com.demoapp.students.models.Passport;
 import com.demoapp.students.models.Student;
+import com.demoapp.students.repositories.DepartmentRepository;
 import com.demoapp.students.repositories.StudentRepository;
 import com.demoapp.students.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +23,15 @@ import java.util.Optional;
 public class StudentServiceImpl implements StudentService{
 
     private final StudentRepository studentRepository;
+    private final DepartmentRepository departmentRepository;
+    private final PasswordEncoder passwordEncoder;
 
 
     @Autowired
-    public StudentServiceImpl(StudentRepository studentRepository){
+    public StudentServiceImpl(StudentRepository studentRepository, DepartmentRepository departmentRepository, PasswordEncoder passwordEncoder){
         this.studentRepository = studentRepository;
+        this.departmentRepository = departmentRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -65,9 +74,24 @@ public class StudentServiceImpl implements StudentService{
         try {
             Optional<Student> existingStudent = studentRepository.findByEmail(student.getEmail());
 
+            Optional<Department> existingDepartment = departmentRepository.findById(student.getDepartment().getId());
+
+            if(existingDepartment.isEmpty()) {
+                return new ApiResponse<>(false, "Department with the given id does not exist", null);
+            }
+
             if(existingStudent.isPresent()) {
                 return new ApiResponse<>(false, "User with that email already exist", null);
             }
+
+            String encodedPassword = passwordEncoder.encode(student.getPassword());
+            student.setPassword(encodedPassword);
+
+            Passport passport = new Passport();
+            passport.setPassportNumber(student.getPassport().getPassportNumber());
+
+            student.setPassport(passport);
+            student.setDepartment(existingDepartment.get());
 
             studentRepository.save(student);
 
@@ -127,6 +151,32 @@ public class StudentServiceImpl implements StudentService{
             return new ApiResponse<>(false, "Oops! Something went wrong with the server", null);
         }
 
+    }
+
+    @Override
+    public ApiResponse<Void> loginUser(AuthDTO authDTO) {
+        try {
+
+            Optional<Student> existingStudent = studentRepository.findByEmail(authDTO.getEmail());
+
+            if(existingStudent.isEmpty()) {
+                return new ApiResponse<>(false, "Invalid credentials", null);
+            }
+
+            boolean validPassword = passwordEncoder.matches(authDTO.getPassword(), existingStudent.get().getPassword());
+
+            if (!validPassword){
+                return new ApiResponse<>(false, "Invalid credentials", null);
+            }
+
+            return new ApiResponse<>(true, "Login Successful", null);
+
+
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+            return new ApiResponse<>(false, "Oops! Something went wrong with the server", null);
+        }
     }
 
 }

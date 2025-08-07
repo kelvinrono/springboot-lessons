@@ -2,6 +2,7 @@ package com.demoapp.students.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.beans.factory.parsing.PassThroughSourceExtractor;
 
 import java.util.UUID;
 
@@ -24,6 +25,9 @@ public class Student {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "password")
+    private String password;
+
     @Column(name = "reg_number")
     private  String regNumber;
 
@@ -32,7 +36,15 @@ public class Student {
     @Column(name = "is_deleted")
     private Boolean isDeleted = false;
 
-    public Student(Integer id, String firstName, String lastName, String email, String regNumber, String course, Boolean isDeleted) {
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "passport_id", referencedColumnName = "id")
+    private Passport passport;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_id")
+    private Department department;
+
+    public Student(Integer id, String firstName, String lastName, String email, String regNumber, String course, Boolean isDeleted, Passport passport, Department department, String password) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -40,6 +52,9 @@ public class Student {
         this.regNumber = regNumber;
         this.course = course;
         this.isDeleted = isDeleted;
+        this.passport = passport;
+        this.department = department;
+        this.password = password;
     }
 
     public Student() {
@@ -51,6 +66,14 @@ public class Student {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getFirstName() {
@@ -99,5 +122,21 @@ public class Student {
 
     public void setDeleted(Boolean deleted) {
         isDeleted = deleted;
+    }
+
+    public Passport getPassport() {
+        return passport;
+    }
+
+    public void setPassport(Passport passport) {
+        this.passport = passport;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
     }
 }

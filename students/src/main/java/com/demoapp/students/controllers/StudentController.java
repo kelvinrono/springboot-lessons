@@ -1,5 +1,6 @@
 package com.demoapp.students.controllers;
 
+import com.demoapp.students.DTOs.AuthDTO;
 import com.demoapp.students.models.Student;
 import com.demoapp.students.responses.ApiResponse;
 import com.demoapp.students.services.StudentService;
@@ -49,5 +50,11 @@ public class StudentController {
     ApiResponse<Void>  deleteStudent(@PathVariable int id){
         return studentService.deleteStudent(id);
     }
+
+    @PostMapping("/login")
+    public ApiResponse<Void> loginUser(@RequestBody AuthDTO authDTO){
+        return studentService.loginUser(authDTO);
+    }
+
 
 }

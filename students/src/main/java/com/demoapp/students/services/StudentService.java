@@ -1,5 +1,6 @@
 package com.demoapp.students.services;
 
+import com.demoapp.students.DTOs.AuthDTO;
 import com.demoapp.students.models.Student;
 import com.demoapp.students.responses.ApiResponse;
 
@@ -11,5 +12,6 @@ public interface StudentService {
    ApiResponse<Student> getStudent(int id);
    ApiResponse<Void> saveStudent(Student student);
    ApiResponse<Void> updateStudent(Student student, int id);
-    ApiResponse<Void> deleteStudent(int id);
+   ApiResponse<Void> deleteStudent(int id);
+   ApiResponse<Void> loginUser(AuthDTO authDTO);
 }
